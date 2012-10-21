@@ -9,10 +9,13 @@
  */
 
 require_once( __DIR__ . "/model/StopModel.class.php");
+require_once( __DIR__ . "/schema/schemabuild.php");
 
 class Stops extends AResource{
     
     public function call(){
+        
+        //return setup_cassandra_schema();
         
         $country = 'BEL' ;
         $company = 'NMBSSNCB' ;

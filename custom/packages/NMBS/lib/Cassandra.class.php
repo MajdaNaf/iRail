@@ -9,6 +9,7 @@
      */
     
     require_once( __DIR__ . '/autoload.php');
+    require_once( __DIR__ . '/ClusterConfig.class.php');
     
     /**
      * use : namespacez
@@ -18,26 +19,33 @@
     use phpcassa\ColumnFamily ;
     
     class C {
-        private static $servers = NULL ;
         private static $pool = NULL ;
-        private static $keyspace = NULL ;
-        private static $init = FALSE ;
+        private static $init = FALSE ; // is it initialized?
         
         /**
          * @param array $servers array of ip adresses formatted as w.x.y.z
          * @param string $keyspace name of the cassandra keyspace
-         * 
-         * Run this function once. Next time it will be ignored
+         * @param mixed $credentials array( username => $username, password => $password )
+         * Run this function once. Next time it will be ignored.
+         * Leave parameters open if you want to setup from config file 'ClusterConfig.class.php'
          */
-        public static function setup( $servers, $keyspace ){
+        public static function setup( $servers = NULL, $keyspace = NULL, $credentials = NULL ){
             if( self::$init ){
                 return FALSE ;
                 // or throw some vague exception...
             }
             self::$init = TRUE ;
-            self::$servers = $servers;
-            self::$keyspace = $keyspace ;
-            self::$pool = new ConnectionPool( $keyspace, $servers );
+            
+            if( is_null($servers) && is_null($keyspace) && is_null($credentials) ){
+                $servers = ClusterConfig::$SERVERS ;
+                $credentials = array( 'username' => ClusterConfig::USERNAME,
+                                      'password' => md5(ClusterConfig::PASSWD)
+                                    );
+                $keyspace = ClusterConfig::KEYSPACE ;
+            }
+            self::$pool = new ConnectionPool(   $keyspace, $servers, NULL, ConnectionPool::DEFAULT_MAX_RETRIES, 
+                                                5000, 5000, ConnectionPool::DEFAULT_RECYCLE, // some default settings
+                                                $credentials ); // and our configured credentials
             return TRUE ;
         }
         

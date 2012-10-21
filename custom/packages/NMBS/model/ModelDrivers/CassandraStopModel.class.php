@@ -15,13 +15,11 @@ use phpcassa\ColumnSlice;
 
 class CassandraStopModel extends StopModelDriver{
 	
-	private static $servers  = array('192.168.5.4');
-	private static $keyspace = 'iRail' ;
     private static $limit    = 200 ;
 	private static $stopcf   = NULL ;
 	
 	public function __construct(){
-		C::setup( self::$servers, self::$keyspace );
+		C::setup();
 		self::$stopcf = C::getColumnFamily('stops');
 	}
     

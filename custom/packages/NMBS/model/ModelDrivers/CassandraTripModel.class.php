@@ -15,8 +15,6 @@ use phpcassa\ColumnSlice;
 
 class CassandraTripModel extends TripModelDriver{
 	
-	private static $servers  = array('192.168.5.4');
-	private static $keyspace = 'iRail' ;
     private static $limit    = 200 ;
     private static $tripcf   = NULL ;
     private static $routecf   = NULL ;
@@ -25,7 +23,7 @@ class CassandraTripModel extends TripModelDriver{
     private static $dateformat = 'Ymd' ;
 	
 	public function __construct(){
-		C::setup( self::$servers, self::$keyspace );
+		C::setup();
         self::$tripcf = C::getColumnFamily('trips');
         self::$routecf = C::getColumnFamily('routes');
         self::$stoptimescf = C::getColumnFamily('stop_times');

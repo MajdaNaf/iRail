@@ -15,15 +15,13 @@ use phpcassa\ColumnSlice;
 
 class CassandraBoardModel extends BoardModelDriver{
 	
-	private static $servers  = array('192.168.5.4');
-	private static $keyspace = 'iRail' ;
     private static $limit    = 50 ;
     private static $boardcf   = NULL ;
     private static $otherday = 3 ;// 3 am
     private static $dateformat = 'Ymd' ;
 	
 	public function __construct(){
-		C::setup( self::$servers, self::$keyspace );
+		C::setup();
         self::$boardcf = C::getColumnFamily('board');
     }
     
